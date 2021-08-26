@@ -9,5 +9,14 @@
         android:id="@+id/menuFragment"
         android:name="com.example.tictactoe.ui.fragments.MenuFragment"
         android:label="fragment_menu"
-        tools:layout="@layout/fragment_menu" />
+        tools:layout="@layout/fragment_menu" >
+        <action
+            android:id="@+id/action_menuFragment_to_playMenuFragment"
+            app:destination="@id/playMenuFragment" />
+    </fragment>
+    <dialog
+        android:id="@+id/playMenuFragment"
+        android:name="com.example.tictactoe.ui.fragments.PlayMenuFragment"
+        android:label="fragment_play_menu"
+        tools:layout="@layout/fragment_play_menu" />
 </navigation>

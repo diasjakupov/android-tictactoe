@@ -11,4 +11,5 @@
 
 
     <color name="profile_icon">#013970</color>
+    <color name="playMenuBtnsColor">#FEC600</color>
 </resources>

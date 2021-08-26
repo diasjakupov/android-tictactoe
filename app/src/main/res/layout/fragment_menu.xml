@@ -37,14 +37,13 @@
         tools:context=".ui.fragments.MenuFragment">
 
 
-
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/mainPlayBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
             android:background="@drawable/main_background_btn"
-            android:padding="12dp"
-            >
+            android:padding="12dp">
 
             <TextView
                 android:id="@+id/playBtnTV"
