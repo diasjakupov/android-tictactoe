@@ -5,18 +5,31 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.activityViewModels
 import com.example.tictactoe.R
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.fragment_play_menu.view.*
 
+@AndroidEntryPoint
 class PlayMenuFragment : DialogFragment() {
+    private lateinit var findGameBtn:Button
+    private val viewModel:PlayMenuViewModel by activityViewModels()
 
-
+    //FIXME("create a separate fragment dedicated to list of lobbies")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        val rootView= inflater.inflate(R.layout.fragment_play_menu, container, false)
+        findGameBtn=rootView.findGameBtn
+
+        findGameBtn.setOnClickListener {
+            connectToGame()
+        }
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_play_menu, container, false)
+        return rootView
     }
 
     override fun onResume() {
@@ -28,6 +41,10 @@ class PlayMenuFragment : DialogFragment() {
         val screenWidth=resources.displayMetrics.widthPixels
         val popupHeight=resources.getDimensionPixelSize(R.dimen.popup_height)
         dialog?.window?.setLayout((screenWidth*0.9).toInt(), popupHeight)
+    }
+
+    private fun connectToGame(){
+        viewModel.connectToGame()
     }
 
 }

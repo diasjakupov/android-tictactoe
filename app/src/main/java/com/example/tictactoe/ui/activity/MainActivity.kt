@@ -5,7 +5,9 @@ import android.os.Bundle
 import android.view.Window
 import android.view.WindowManager
 import com.example.tictactoe.R
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
