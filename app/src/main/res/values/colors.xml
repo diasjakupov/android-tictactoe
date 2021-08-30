@@ -8,8 +8,12 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="green">#10b531</color>
+    <color name="orange">#ff9100</color>
 
 
     <color name="profile_icon">#013970</color>
     <color name="playMenuBtnsColor">#FEC600</color>
+    <color name="light_grey">#f5f5f5</color>
+    <color name="placeholderColor">#c7c7c7</color>
+
 </resources>
