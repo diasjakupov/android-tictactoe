@@ -12,9 +12,9 @@ class GameRepositoryImpl @Inject constructor(
     ):GameRepository {
     private var webSocketClient: WebSocket? = null
 
-    override suspend fun createSocket(gameUUID: String, userId: Int){
+    override fun createSocket(gameUUID: String, userId: Int){
         webSocketClient=factory.createSocket("${Constants.GAME_WEBSOCKET_URL}$gameUUID/?id=$userId")
-        webSocketClient!!.connect()
+        webSocketClient!!.connectAsynchronously()
     }
 
 }

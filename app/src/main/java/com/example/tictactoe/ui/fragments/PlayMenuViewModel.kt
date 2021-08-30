@@ -21,7 +21,7 @@ class PlayMenuViewModel @Inject constructor(
     private val repository: GameRepository,
     private val dataStoreSource: DataStoreSource
 ): ViewModel(){
-    private var userId:Int?=1
+    private var userId:Int?=null
 
     init {
         //FIXME("Made a separate logic for this")
