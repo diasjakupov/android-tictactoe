@@ -2,6 +2,14 @@ package com.example.tictactoe.data.di
 
 import android.content.Context
 import com.example.tictactoe.data.datasources.DataStoreSource
+import com.example.tictactoe.data.datasources.RemoteDataSource
+import com.example.tictactoe.data.datasources.RemoteDataSourceImpl
+import com.example.tictactoe.data.network.UserApi
+import com.example.tictactoe.data.repository.game.GameRepository
+import com.example.tictactoe.data.repository.game.GameRepositoryImpl
+import com.example.tictactoe.data.repository.user.UserRepository
+import com.example.tictactoe.data.repository.user.UserRepositoryImpl
+import com.neovisionaries.ws.client.WebSocketFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -19,4 +27,25 @@ class DataModule {
     fun provideDataStore(@ApplicationContext context: Context):DataStoreSource{
         return DataStoreSource(context)
     }
+
+
+    @Singleton
+    @Provides
+    fun provideRemoteDataSource(userApi: UserApi):RemoteDataSource{
+        return RemoteDataSourceImpl(userApi)
+    }
+
+    @Singleton
+    @Provides
+    fun provideUserRepository(dataStoreSource: DataStoreSource, remoteDataSource: RemoteDataSource):UserRepository{
+        return UserRepositoryImpl(dataStoreSource, remoteDataSource)
+    }
+
+
+    @Singleton
+    @Provides
+    fun provideGameRepository(factory: WebSocketFactory): GameRepository {
+        return GameRepositoryImpl(factory)
+    }
+
 }

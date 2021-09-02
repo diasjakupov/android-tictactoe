@@ -1,6 +1,11 @@
 package com.example.tictactoe.data.repository.user
 
-interface UserRepository {
+import androidx.lifecycle.MutableLiveData
+import com.example.tictactoe.data.utils.LocalDataState
 
-    suspend fun login(username:String, password:String): Int
+interface UserRepository {
+    val userId:MutableLiveData<Int>
+    val isDataLoaded:MutableLiveData<LocalDataState>
+
+    suspend fun login(username:String, password:String)
 }

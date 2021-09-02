@@ -1,5 +1,6 @@
 package com.example.tictactoe.data.di
 
+import com.example.tictactoe.data.network.UserApi
 import com.example.tictactoe.data.utils.Constants
 import com.neovisionaries.ws.client.WebSocket
 import com.neovisionaries.ws.client.WebSocketFactory
@@ -38,5 +39,11 @@ class WebModule {
     @Provides
     fun provideWebSocketFactory(): WebSocketFactory{
         return WebSocketFactory()
+    }
+
+    @Singleton
+    @Provides
+    fun provideUserApi(retrofit: Retrofit):UserApi{
+        return retrofit.create(UserApi::class.java)
     }
 }
