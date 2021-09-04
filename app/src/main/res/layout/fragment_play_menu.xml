@@ -9,7 +9,7 @@
     android:paddingEnd="30dp"
     android:paddingBottom="24dp"
     android:background="@drawable/dialog_fragment_bg"
-    tools:context=".ui.fragments.PlayMenuFragment">
+    tools:context=".ui.fragments.main.PlayMenuFragment">
 
 
     <TextView
