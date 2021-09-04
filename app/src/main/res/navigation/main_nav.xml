@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/menuFragment"
-        android:name="com.example.tictactoe.ui.fragments.MenuFragment"
+        android:name="com.example.tictactoe.ui.fragments.main.MenuFragment"
         android:label="fragment_menu"
         tools:layout="@layout/fragment_menu" >
         <action
@@ -16,7 +16,16 @@
     </fragment>
     <dialog
         android:id="@+id/playMenuFragment"
-        android:name="com.example.tictactoe.ui.fragments.PlayMenuFragment"
+        android:name="com.example.tictactoe.ui.fragments.main.PlayMenuFragment"
         android:label="fragment_play_menu"
-        tools:layout="@layout/fragment_play_menu" />
+        tools:layout="@layout/fragment_play_menu" >
+        <action
+            android:id="@+id/action_playMenuFragment_to_gameListFragment"
+            app:destination="@id/gameListFragment" />
+    </dialog>
+    <fragment
+        android:id="@+id/gameListFragment"
+        android:name="com.example.tictactoe.ui.fragments.gameList.GameListFragment"
+        android:label="fragment_game_list"
+        tools:layout="@layout/fragment_game_list" />
 </navigation>

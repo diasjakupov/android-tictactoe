@@ -21,8 +21,7 @@ class DataStoreSource(private val context:Context) {
     )
 
     val userData: Flow<Int> = context.dataStore.data.map {
-//        it[PreferencesKey.USER_ID]?: -1
-        -1
+        it[PreferencesKey.USER_ID]?: -1
     }
 
     suspend fun updateUserId(userId:Int=1){

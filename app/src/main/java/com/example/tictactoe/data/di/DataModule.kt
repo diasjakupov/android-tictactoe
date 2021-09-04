@@ -4,6 +4,7 @@ import android.content.Context
 import com.example.tictactoe.data.datasources.DataStoreSource
 import com.example.tictactoe.data.datasources.RemoteDataSource
 import com.example.tictactoe.data.datasources.RemoteDataSourceImpl
+import com.example.tictactoe.data.network.GameApi
 import com.example.tictactoe.data.network.UserApi
 import com.example.tictactoe.data.repository.game.GameRepository
 import com.example.tictactoe.data.repository.game.GameRepositoryImpl
@@ -31,8 +32,8 @@ class DataModule {
 
     @Singleton
     @Provides
-    fun provideRemoteDataSource(userApi: UserApi):RemoteDataSource{
-        return RemoteDataSourceImpl(userApi)
+    fun provideRemoteDataSource(userApi: UserApi, gameApi:GameApi):RemoteDataSource{
+        return RemoteDataSourceImpl(userApi, gameApi)
     }
 
     @Singleton
@@ -44,8 +45,8 @@ class DataModule {
 
     @Singleton
     @Provides
-    fun provideGameRepository(factory: WebSocketFactory): GameRepository {
-        return GameRepositoryImpl(factory)
+    fun provideGameRepository(factory: WebSocketFactory, remoteDataSource: RemoteDataSource): GameRepository {
+        return GameRepositoryImpl(factory, remoteDataSource)
     }
 
 }

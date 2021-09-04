@@ -1,5 +1,7 @@
 package com.example.tictactoe.data.di
 
+import android.util.Log
+import com.example.tictactoe.data.network.GameApi
 import com.example.tictactoe.data.network.UserApi
 import com.example.tictactoe.data.utils.Constants
 import com.neovisionaries.ws.client.WebSocket
@@ -8,9 +10,11 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.nio.Buffer
 import javax.inject.Singleton
 
 
@@ -18,10 +22,26 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 class WebModule {
 
+
     @Singleton
     @Provides
     fun provideOkHttpClient():OkHttpClient{
+        val interceptor=Interceptor{
+            val url = it.request()
+                .url().newBuilder()
+                .build()
+
+
+            val request = it.request()
+                .newBuilder()
+                .url(url)
+                .build()
+
+            return@Interceptor it.proceed(request)
+        }
+
         return OkHttpClient.Builder()
+            .addInterceptor(interceptor)
             .build()
     }
 
@@ -45,5 +65,11 @@ class WebModule {
     @Provides
     fun provideUserApi(retrofit: Retrofit):UserApi{
         return retrofit.create(UserApi::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideGameApi(retrofit: Retrofit):GameApi{
+        return retrofit.create(GameApi::class.java)
     }
 }

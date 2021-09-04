@@ -1,13 +1,13 @@
-package com.example.tictactoe.ui.fragments
+package com.example.tictactoe.ui.fragments.main
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import com.example.tictactoe.R
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_play_menu.view.*
@@ -15,7 +15,7 @@ import kotlinx.android.synthetic.main.fragment_play_menu.view.*
 @AndroidEntryPoint
 class PlayMenuFragment : DialogFragment() {
     private lateinit var findGameBtn:Button
-    private val viewModel:PlayMenuViewModel by activityViewModels()
+    private val viewModel: PlayMenuViewModel by activityViewModels()
 
     //FIXME("create a separate fragment dedicated to list of lobbies")
     override fun onCreateView(
@@ -26,7 +26,7 @@ class PlayMenuFragment : DialogFragment() {
         findGameBtn=rootView.findGameBtn
 
         findGameBtn.setOnClickListener {
-            connectToGame()
+            showListOfGames()
         }
         // Inflate the layout for this fragment
         return rootView
@@ -43,8 +43,9 @@ class PlayMenuFragment : DialogFragment() {
         dialog?.window?.setLayout((screenWidth*0.9).toInt(), popupHeight)
     }
 
-    private fun connectToGame(){
-        viewModel.connectToGame()
+    private fun showListOfGames(){
+        val action=PlayMenuFragmentDirections.actionPlayMenuFragmentToGameListFragment()
+        findNavController().navigate(action)
     }
 
 }

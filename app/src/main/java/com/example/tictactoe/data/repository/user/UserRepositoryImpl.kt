@@ -6,31 +6,56 @@ import androidx.lifecycle.asLiveData
 import com.example.tictactoe.data.datasources.DataStoreSource
 import com.example.tictactoe.data.datasources.RemoteDataSource
 import com.example.tictactoe.data.models.LoginBody
+import com.example.tictactoe.data.models.LoginResponse
+import com.example.tictactoe.data.network.NetworkResult
 import com.example.tictactoe.data.utils.LocalDataState
+import retrofit2.Response
+import java.lang.Exception
 import javax.inject.Inject
 
 
 class UserRepositoryImpl @Inject constructor(
     private val dataStoreSource: DataStoreSource,
-    private val remoteDataSource: RemoteDataSource
+    private val remoteDataSource: RemoteDataSource,
 ): UserRepository {
     override val userId= MutableLiveData<Int>()
-    override val isDataLoaded = MutableLiveData<LocalDataState>(LocalDataState.LOADING)
+    override val isLocalDataLoaded = MutableLiveData<LocalDataState>(LocalDataState.LOADING)
+    override val isRemoteDataLoaded = MutableLiveData<NetworkResult<LoginResponse>>()
 
     init {
         dataStoreSource.userData.asLiveData().observeForever {
-            Log.e("UserRepository", "userID $it")
             userId.value=it
             if(it==-1){
-                isDataLoaded.value=LocalDataState.ERROR
+                isLocalDataLoaded.value=LocalDataState.ERROR
             }else{
-                isDataLoaded.value=LocalDataState.SUCCESS(it)
+                isLocalDataLoaded.value=LocalDataState.SUCCESS(it)
             }
         }
     }
 
     override suspend fun login(username: String, password: String) {
-        val response=remoteDataSource.login(LoginBody(username, password))
-        //TODO(Implement three states of network result)
+        isRemoteDataLoaded.postValue(NetworkResult.Loading())
+        try {
+            val response=remoteDataSource.login(LoginBody(username, password))
+            val ntResult=handleNetworkResult(response)
+            isRemoteDataLoaded.postValue(ntResult)
+        }catch (e:Exception){
+            Log.e("TAG", e.toString())
+            isRemoteDataLoaded.postValue(NetworkResult.Error(null, "Uncaught error"))
+        }
+    }
+
+    private suspend fun handleNetworkResult(response: Response<LoginResponse>): NetworkResult<LoginResponse> {
+        return when{
+            response.code()== 202->{
+                dataStoreSource.updateUserId(response.body()!!.userId)
+                NetworkResult.Success(response.body())
+
+            }
+            response.code()==404->{
+                NetworkResult.Error(response.body(), response.body()!!.errors)
+            }
+            else-> NetworkResult.Error(null, "Uncaught error")
+        }
     }
 }

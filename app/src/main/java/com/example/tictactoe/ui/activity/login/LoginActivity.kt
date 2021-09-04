@@ -14,13 +14,17 @@ import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import com.example.tictactoe.R
+import com.example.tictactoe.data.models.LoginResponse
+import com.example.tictactoe.data.network.NetworkResult
 import com.example.tictactoe.data.utils.LocalDataState
+import com.example.tictactoe.ui.fragments.LoadingFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_login.*
 
 @AndroidEntryPoint
 class LoginActivity : AppCompatActivity() {
     private val viewModel: LoginViewModel by viewModels()
+    private lateinit var loadingDialog:LoadingFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,6 +40,9 @@ class LoginActivity : AppCompatActivity() {
 
         //setClickableStatus
         setClickableUI()
+
+        //loadingUI
+        setDataLoadingUI()
     }
 
     private fun setOnFocusListeners() {
@@ -75,6 +82,27 @@ class LoginActivity : AppCompatActivity() {
         submitLogin.setOnClickListener {
             viewModel.login(usernameET.text.toString(), passwordET.text.toString())
         }
+    }
+
+    private fun setDataLoadingUI(){
+        viewModel.isRemoteDataLoaded.observe(this, {
+            when(it){
+                is NetworkResult.Success->{
+                    loadingDialog.dismiss()
+                    finish()
+                }
+                is NetworkResult.Loading->{
+                    loadingDialog= LoadingFragment()
+                    loadingDialog.show(supportFragmentManager, "Loading")
+                }
+                is NetworkResult.Error->{
+                    loadingDialog.dismiss()
+                    loginErrorTV.visibility = View.VISIBLE
+                    loginErrorTV.text="${it.errorMessage}"
+                }
+
+            }
+        })
     }
 
     private fun setClickableUI() {

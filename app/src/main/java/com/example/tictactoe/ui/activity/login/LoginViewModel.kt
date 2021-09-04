@@ -14,18 +14,12 @@ import javax.inject.Inject
 class LoginViewModel @Inject constructor(
     private val repository: UserRepository
 ): ViewModel() {
-    val isDataLoaded = MutableLiveData<LocalDataState>(LocalDataState.LOADING)
-
-    init {
-        repository.isDataLoaded.observeForever {
-            isDataLoaded.value=it
-        }
-    }
+    val isDataLoaded = repository.isLocalDataLoaded
+    val isRemoteDataLoaded = repository.isRemoteDataLoaded
 
     fun login(username:String, password:String){
         viewModelScope.launch(Dispatchers.IO){
             repository.login(username, password)
-
         }
     }
 }
