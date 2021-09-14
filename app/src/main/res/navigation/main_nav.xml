@@ -27,5 +27,18 @@
         android:id="@+id/gameListFragment"
         android:name="com.example.tictactoe.ui.fragments.gameList.GameListFragment"
         android:label="fragment_game_list"
-        tools:layout="@layout/fragment_game_list" />
+        tools:layout="@layout/fragment_game_list" >
+        <action
+            android:id="@+id/action_gameListFragment_to_gameActivity"
+            app:destination="@id/gameActivity" />
+    </fragment>
+    <activity
+        android:id="@+id/gameActivity"
+        android:name="com.example.tictactoe.ui.activity.game.GameActivity"
+        android:label="activity_game"
+        tools:layout="@layout/activity_game" >
+        <argument
+            android:name="gameUUID"
+            app:argType="string" />
+    </activity>
 </navigation>

@@ -3,14 +3,22 @@ package com.example.tictactoe.ui.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.navigation.Navigation
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tictactoe.R
 import com.example.tictactoe.data.models.GameInfo
 import com.example.tictactoe.data.utils.GameDiffUtils
+import com.example.tictactoe.ui.fragments.gameList.GameListFragmentDirections
 import kotlinx.android.synthetic.main.game_row_item.view.*
 
-class GameListAdapter: RecyclerView.Adapter<GameListAdapter.ViewHolder>() {
+class GameListAdapter(
+    private val fragment:Fragment
+): RecyclerView.Adapter<GameListAdapter.ViewHolder>() {
     private var gameList= emptyList<GameInfo>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -33,10 +41,15 @@ class GameListAdapter: RecyclerView.Adapter<GameListAdapter.ViewHolder>() {
         diffUtilsResult.dispatchUpdatesTo(this)
     }
 
-    class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
+    inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
         fun bind(data:GameInfo){
             itemView.gameNameTV.text=data.name
             itemView.gameCreatorTV.text=data.first_player.toString()
+
+            itemView.gameConnectBtn.setOnClickListener {
+                val action=GameListFragmentDirections.actionGameListFragmentToGameActivity(data.code)
+                fragment.findNavController().navigate(action)
+            }
         }
     }
 }

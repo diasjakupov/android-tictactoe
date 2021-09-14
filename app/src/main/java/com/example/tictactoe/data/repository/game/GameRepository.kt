@@ -8,5 +8,6 @@ interface GameRepository {
     val gameList:MutableLiveData<NetworkResult<List<GameInfo>>>
 
     fun createSocket(gameUUID: String, userId: Int)
+    fun disconnect()
     suspend fun getGameList()
 }

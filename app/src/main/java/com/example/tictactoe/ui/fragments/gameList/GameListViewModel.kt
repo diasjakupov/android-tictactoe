@@ -15,6 +15,7 @@ class GameListViewModel @Inject constructor(
 ):ViewModel(){
     val gameList=repository.gameList
 
+
     fun getGameList()=viewModelScope.launch(Dispatchers.IO){
         repository.getGameList()
     }
