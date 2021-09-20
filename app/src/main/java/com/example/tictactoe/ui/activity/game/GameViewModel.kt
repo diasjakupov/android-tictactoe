@@ -24,6 +24,10 @@ class GameViewModel @Inject constructor(
     }
 
     fun disconnect()=viewModelScope.launch(Dispatchers.IO){
+        gameRepository.disconnect()
+    }
 
+    fun sendMessage(data:String)=viewModelScope.launch(Dispatchers.IO){
+        gameRepository.sendData(data)
     }
 }

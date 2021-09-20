@@ -3,13 +3,17 @@ package com.example.tictactoe.ui.activity.game
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tictactoe.R
+import com.example.tictactoe.data.utils.Constants
 import com.example.tictactoe.ui.adapters.GameFieldAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_game.*
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
@@ -25,17 +29,17 @@ class GameActivity : AppCompatActivity() {
 
         viewModel.connectToGame(args.gameUUID)
         setUI()
+        lifecycleScope.launch {
+            delay(5000)
+            viewModel.sendMessage("HEllo")
+        }
     }
 
     private fun setUI(){
         rv=gameField
         rv.adapter=adapter
         rv.layoutManager=GridLayoutManager(this, 3) //TODO
-        adapter.updateData(listOf(
-            hashMapOf(1 to "X"), hashMapOf(2 to "O"), hashMapOf(3 to ""),
-            hashMapOf(4 to ""), hashMapOf(5 to "X"), hashMapOf(6 to ""),
-            hashMapOf(7 to ""), hashMapOf(8 to "O"), hashMapOf(9 to "X")
-        ))
+        adapter.updateData(Constants.BASE_FIELD_VALUES)
     }
 
     override fun onDestroy() {

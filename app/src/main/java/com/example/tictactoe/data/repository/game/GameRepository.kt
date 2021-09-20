@@ -10,4 +10,5 @@ interface GameRepository {
     fun createSocket(gameUUID: String, userId: Int)
     fun disconnect()
     suspend fun getGameList()
+    suspend fun sendData(data:String)
 }
