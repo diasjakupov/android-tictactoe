@@ -6,7 +6,7 @@ import com.example.tictactoe.data.network.NetworkResult
 
 interface GameRepository {
     val gameList:MutableLiveData<NetworkResult<List<GameInfo>>>
-
+    val markedFieldCoords: MutableLiveData<GameInfo>
     fun createSocket(gameUUID: String, userId: Int)
     fun disconnect()
     suspend fun getGameList()

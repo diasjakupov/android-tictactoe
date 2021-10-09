@@ -8,5 +8,6 @@ data class GameInfo(
     val movements:String,
     val game_status:String,
     val first_player:Int,
-    val second_player: Int
+    val second_player: Int,
+    val winUser:Int
 )

@@ -8,6 +8,7 @@ import com.example.tictactoe.data.models.GameInfo
 import com.example.tictactoe.data.network.NetworkResult
 import com.example.tictactoe.data.utils.Constants
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.neovisionaries.ws.client.*
 import retrofit2.Response
 import java.lang.Exception
@@ -19,6 +20,7 @@ class GameRepositoryImpl @Inject constructor(
     private val remoteDataSource: RemoteDataSource
     ):GameRepository {
     private var webSocketClient: WebSocket? = null
+    override val markedFieldCoords= MutableLiveData<GameInfo>()
     override val gameList=MutableLiveData<NetworkResult<List<GameInfo>>>()
 
     override fun createSocket(gameUUID: String, userId: Int){
@@ -43,7 +45,8 @@ class GameRepositoryImpl @Inject constructor(
     }
 
     override suspend fun sendData(data: String) {
-        webSocketClient!!.sendText(Gson().toJson(hashMapOf("message" to "1,3")))
+        webSocketClient!!.sendText(Gson().toJson(hashMapOf("message" to data)))
+
         Log.e("TAG", "${webSocketClient!!.uri}")
     }
 
@@ -64,7 +67,10 @@ class GameRepositoryImpl @Inject constructor(
 
             override fun onTextMessage(websocket: WebSocket?, text: String?) {
                 if (text != null) {
-                    Log.e("TAG", text)
+                    val message=Gson().fromJson<HashMap<String, String>>(text, object: TypeToken<HashMap<String, String>>(){}.type)
+                    Log.e("TAG", "$message")
+                    val parsedValue=Gson().fromJson<GameInfo>(message["message"], object: TypeToken<GameInfo>(){}.type)
+                    markedFieldCoords.postValue(parsedValue)
                 }
             }
         })
