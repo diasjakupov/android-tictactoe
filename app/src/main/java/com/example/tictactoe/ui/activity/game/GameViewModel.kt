@@ -3,6 +3,7 @@ package com.example.tictactoe.ui.activity.game
 import android.util.Log
 import androidx.lifecycle.*
 import com.example.tictactoe.data.models.GameInfo
+import com.example.tictactoe.data.models.GameResult
 import com.example.tictactoe.data.models.GameSize
 import com.example.tictactoe.data.repository.game.GameRepository
 import com.example.tictactoe.data.repository.user.UserRepository
@@ -22,13 +23,19 @@ class GameViewModel @Inject constructor(
     private val userRepository: UserRepository
 ):ViewModel() {
     private val gameSize=GameSize.NINE
+    val isEnded: LiveData<GameResult> = Transformations.map(gameRepository.markedFieldCoords){
+        val status=Gson().fromJson<Int>(it.game_status, object:TypeToken<Int>(){}.type)
+        return@map GameResult(it.winUser, status)
+    }
     val moves: LiveData<MutableList<HashMap<Int, String>>> =
         Transformations.map(gameRepository.markedFieldCoords) {
             val parsedValue=Gson().fromJson<List<HashMap<String, String>>>(it.movements, object: TypeToken<List<HashMap<String, String>>>(){}.type)
             //get only the number of square and the sign
+            Log.e("TAG", "$parsedValue")
             val processedValue=parsedValue.map { item->
                 hashMapOf(item["n"]!!.toInt() to item["sign"]!!)
             } as MutableList<HashMap<Int, String>>?
+
             val field=when(gameSize){
                 GameSize.NINE->Constants.BASE_FIELD_VALUES_9
                 GameSize.SIXTEEN->Constants.BASE_FIELD_VALUES_16
@@ -44,14 +51,15 @@ class GameViewModel @Inject constructor(
                     return@map move
                 }
             }
+            Log.e("TAG", "$processedValue /n $result")
             return@map result as MutableList<HashMap<Int, String>>?
         }
-    var mySign=-1
+    var myId=-1
 
     fun connectToGame(gameUUID:String)=viewModelScope.launch(Dispatchers.IO){
         if(userRepository.isLocalDataLoaded.value is LocalDataState.SUCCESS){
             gameRepository.createSocket(gameUUID, userRepository.userId.value!!)
-            mySign=userRepository.userId.value!!
+            myId=userRepository.userId.value!!
         }
     }
 

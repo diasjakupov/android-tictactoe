@@ -17,10 +17,11 @@ import javax.inject.Inject
 
 class GameRepositoryImpl @Inject constructor(
     private val factory: WebSocketFactory,
-    private val remoteDataSource: RemoteDataSource
-    ):GameRepository {
+    private val remoteDataSource: RemoteDataSource,
+):GameRepository {
     private var webSocketClient: WebSocket? = null
     override val markedFieldCoords= MutableLiveData<GameInfo>()
+    override val userSign= MutableLiveData<String>()
     override val gameList=MutableLiveData<NetworkResult<List<GameInfo>>>()
 
     override fun createSocket(gameUUID: String, userId: Int){
@@ -68,9 +69,13 @@ class GameRepositoryImpl @Inject constructor(
             override fun onTextMessage(websocket: WebSocket?, text: String?) {
                 if (text != null) {
                     val message=Gson().fromJson<HashMap<String, String>>(text, object: TypeToken<HashMap<String, String>>(){}.type)
-                    Log.e("TAG", "$message")
-                    val parsedValue=Gson().fromJson<GameInfo>(message["message"], object: TypeToken<GameInfo>(){}.type)
-                    markedFieldCoords.postValue(parsedValue)
+                    if(message.containsKey("message")){
+                        val parsedValue=Gson().fromJson<GameInfo>(message["message"], object: TypeToken<GameInfo>(){}.type)
+                        markedFieldCoords.postValue(parsedValue)
+                    }else if(message.containsKey("sign")){
+                        userSign.postValue(message["sign"])
+                    }
+
                 }
             }
         })

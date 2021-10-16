@@ -38,12 +38,31 @@ class GameActivity : AppCompatActivity() {
         rv.adapter=adapter
         rv.layoutManager=GridLayoutManager(this, 3) //TODO
         adapter.updateData(Constants.BASE_FIELD_VALUES_9)
-        observeData()
+        observingNewMoves()
+        observingGameStatus()
     }
 
-    private fun observeData(){
+    private fun observingNewMoves(){
         viewModel.moves.observe(this, {
             adapter.updateData(it)
+        })
+    }
+
+    private fun observingGameStatus(){
+        viewModel.isEnded.observe(this, {
+            if(it.gameStatus>0){
+                rv.isEnabled=false
+                viewModel.moves.removeObservers(this)
+                if(it.winnerUser==viewModel.myId){
+                    Log.e("TAG", "YOU WIN")
+                }else{
+                    Log.e("TAG", "YOU LOSE")
+                }
+            }else if(it.gameStatus==-1){
+                rv.isEnabled=false
+                viewModel.moves.removeObservers(this)
+                Log.e("TAG", "DRAW")
+            }
         })
     }
 
