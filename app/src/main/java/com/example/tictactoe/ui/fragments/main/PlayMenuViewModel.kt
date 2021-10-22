@@ -12,6 +12,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.launch
+import java.util.*
 import javax.inject.Inject
 import kotlin.properties.Delegates
 
@@ -24,22 +25,25 @@ class PlayMenuViewModel @Inject constructor(
     private var userId:Int?=null
 
     init {
-        //FIXME("Made a separate logic for this")
         viewModelScope.launch {
             dataStoreSource.updateUserId()
         }
         dataStoreSource.userData.asLiveData().observeForever {
             userId=it
-            Log.e("PLAYMENUVIEWMODEL", "inside observer")
         }
     }
 
-    fun connectToGame(code:String="6c1cb5"){
+    fun getRandomCode():String{
+        return UUID.randomUUID().toString().slice((0..5)).uppercase()
+    }
+
+    fun createGame(gameName:String,gameUUID:String):Boolean{
         if(userId!=null){
-            viewModelScope.launch(Dispatchers.Default){
-                repository.createSocket(code, userId!!)
-                Log.e("PLAYMENUVIEWMODEL", "inside connecting")
+            val isSuccessful=repository.createGameInstance(gameName, gameUUID)
+            if(isSuccessful){
+                repository.createSocket(gameUUID, userId!!)
             }
         }
+        return false
     }
 }

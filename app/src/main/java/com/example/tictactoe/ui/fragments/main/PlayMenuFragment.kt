@@ -15,18 +15,22 @@ import kotlinx.android.synthetic.main.fragment_play_menu.view.*
 @AndroidEntryPoint
 class PlayMenuFragment : DialogFragment() {
     private lateinit var findGameBtn:Button
+    private lateinit var createGameBtn:Button
     private val viewModel: PlayMenuViewModel by activityViewModels()
 
-    //FIXME("create a separate fragment dedicated to list of lobbies")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val rootView= inflater.inflate(R.layout.fragment_play_menu, container, false)
         findGameBtn=rootView.findGameBtn
+        createGameBtn=rootView.createGameMenuBtn
 
         findGameBtn.setOnClickListener {
             showListOfGames()
+        }
+        createGameBtn.setOnClickListener {
+            showCreateFormMenu()
         }
         // Inflate the layout for this fragment
         return rootView
@@ -45,6 +49,11 @@ class PlayMenuFragment : DialogFragment() {
 
     private fun showListOfGames(){
         val action=PlayMenuFragmentDirections.actionPlayMenuFragmentToGameListFragment()
+        findNavController().navigate(action)
+    }
+
+    private fun showCreateFormMenu(){
+        val action=PlayMenuFragmentDirections.actionPlayMenuFragmentToGameCreateFormFragment()
         findNavController().navigate(action)
     }
 

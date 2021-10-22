@@ -22,6 +22,9 @@
         <action
             android:id="@+id/action_playMenuFragment_to_gameListFragment"
             app:destination="@id/gameListFragment" />
+        <action
+            android:id="@+id/action_playMenuFragment_to_gameCreateFormFragment"
+            app:destination="@id/gameCreateFormFragment" />
     </dialog>
     <fragment
         android:id="@+id/gameListFragment"
@@ -41,4 +44,9 @@
             android:name="gameUUID"
             app:argType="string" />
     </activity>
+    <dialog
+        android:id="@+id/gameCreateFormFragment"
+        android:name="com.example.tictactoe.ui.fragments.createGame.GameCreateFormFragment"
+        android:label="fragment_game_create_form"
+        tools:layout="@layout/fragment_game_create_form" />
 </navigation>

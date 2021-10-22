@@ -2,7 +2,6 @@ package com.example.tictactoe.data.repository.game
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import com.example.tictactoe.data.datasources.DataStoreSource
 import com.example.tictactoe.data.datasources.RemoteDataSource
 import com.example.tictactoe.data.models.GameInfo
 import com.example.tictactoe.data.network.NetworkResult
@@ -20,6 +19,7 @@ class GameRepositoryImpl @Inject constructor(
     private val remoteDataSource: RemoteDataSource,
 ):GameRepository {
     private var webSocketClient: WebSocket? = null
+    override val webSocketState= MutableLiveData<WebSocketState>()
     override val markedFieldCoords= MutableLiveData<GameInfo>()
     override val userSign= MutableLiveData<String>()
     override val gameList=MutableLiveData<NetworkResult<List<GameInfo>>>()
@@ -28,6 +28,10 @@ class GameRepositoryImpl @Inject constructor(
         webSocketClient=factory.createSocket("${Constants.GAME_WEBSOCKET_URL}$gameUUID/?id=$userId")
         webSocketClient!!.connect()
         addWebSocketListener()
+    }
+
+    override fun createGameInstance(gameName: String, gameUUID: String): Boolean {
+        TODO("Not yet implemented")
     }
 
     override fun disconnect() {
@@ -63,9 +67,16 @@ class GameRepositoryImpl @Inject constructor(
     private fun addWebSocketListener(){
         webSocketClient!!.addListener(object: WebSocketAdapter(){
             override fun onError(websocket: WebSocket?, cause: WebSocketException?) {
-                Log.e("TAG", cause?.message!!)
+                webSocketState.postValue(WebSocketState.CLOSED)
             }
 
+            override fun onConnected(
+                websocket: WebSocket?,
+                headers: MutableMap<String, MutableList<String>>?
+            ) {
+                super.onConnected(websocket, headers)
+                webSocketState.postValue(WebSocketState.OPEN)
+            }
             override fun onTextMessage(websocket: WebSocket?, text: String?) {
                 if (text != null) {
                     val message=Gson().fromJson<HashMap<String, String>>(text, object: TypeToken<HashMap<String, String>>(){}.type)
