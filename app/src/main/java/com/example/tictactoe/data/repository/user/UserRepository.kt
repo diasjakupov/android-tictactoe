@@ -7,7 +7,7 @@ import com.example.tictactoe.data.utils.LocalDataState
 
 interface UserRepository {
     val userId:MutableLiveData<Int>
-    val isLocalDataLoaded:MutableLiveData<LocalDataState>
+    val isLocalDataLoaded:MutableLiveData<LocalDataState<Int>>
     val isRemoteDataLoaded: MutableLiveData<NetworkResult<LoginResponse>>
 
     suspend fun login(username:String, password:String)

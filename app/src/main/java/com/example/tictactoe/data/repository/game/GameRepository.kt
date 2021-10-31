@@ -11,8 +11,8 @@ interface GameRepository {
     val userSign: MutableLiveData<String>
     val webSocketState: MutableLiveData<WebSocketState>
     fun createSocket(gameUUID: String, userId: Int)
-    fun createGameInstance(gameName: String, gameUUID: String): Boolean
     fun disconnect()
     suspend fun getGameList()
+    suspend fun createGameInstance(gameName: String, gameUUID: String): Boolean
     suspend fun sendData(data:String)
 }

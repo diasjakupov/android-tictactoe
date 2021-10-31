@@ -3,6 +3,7 @@ package com.example.tictactoe.data.repository.game
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.example.tictactoe.data.datasources.RemoteDataSource
+import com.example.tictactoe.data.models.GameCreationParams
 import com.example.tictactoe.data.models.GameInfo
 import com.example.tictactoe.data.network.NetworkResult
 import com.example.tictactoe.data.utils.Constants
@@ -30,8 +31,13 @@ class GameRepositoryImpl @Inject constructor(
         addWebSocketListener()
     }
 
-    override fun createGameInstance(gameName: String, gameUUID: String): Boolean {
-        TODO("Not yet implemented")
+    override suspend fun createGameInstance(gameName: String, gameUUID: String): Boolean{
+        val response=remoteDataSource.createGameInstance(GameCreationParams(gameName, gameUUID))
+        return when(handleNetworkResult(response)){
+            is NetworkResult.Success->true
+            is NetworkResult.Error->false
+            else->false
+        }
     }
 
     override fun disconnect() {
@@ -51,16 +57,13 @@ class GameRepositoryImpl @Inject constructor(
 
     override suspend fun sendData(data: String) {
         webSocketClient!!.sendText(Gson().toJson(hashMapOf("message" to data)))
-
-        Log.e("TAG", "${webSocketClient!!.uri}")
     }
 
-    private fun handleNetworkResult(response: Response<List<GameInfo>>): NetworkResult<List<GameInfo>>{
+    private fun <T> handleNetworkResult(response: Response<T>): NetworkResult<T>{
         return if(response.isSuccessful){
             NetworkResult.Success(response.body())
         }else{
-            Log.e("GameRepository", response.message())
-            NetworkResult.Error(null, "Error")
+            NetworkResult.Error(null, response.message())
         }
     }
 
@@ -68,6 +71,20 @@ class GameRepositoryImpl @Inject constructor(
         webSocketClient!!.addListener(object: WebSocketAdapter(){
             override fun onError(websocket: WebSocket?, cause: WebSocketException?) {
                 webSocketState.postValue(WebSocketState.CLOSED)
+            }
+
+
+            override fun onSendingHandshake(
+                websocket: WebSocket?,
+                requestLine: String?,
+                headers: MutableList<Array<String>>?
+            ) {
+                webSocketState.postValue(WebSocketState.CONNECTING)
+                super.onSendingHandshake(websocket, requestLine, headers)
+            }
+
+            override fun onTextMessage(websocket: WebSocket?, data: ByteArray?) {
+                super.onTextMessage(websocket, data)
             }
 
             override fun onConnected(

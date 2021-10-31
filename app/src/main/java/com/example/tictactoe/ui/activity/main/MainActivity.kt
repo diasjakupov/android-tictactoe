@@ -3,13 +3,12 @@ package com.example.tictactoe.ui.activity.main
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.Window
 import android.view.WindowManager
 import androidx.activity.viewModels
 import com.example.tictactoe.R
 import com.example.tictactoe.data.utils.LocalDataState
-import com.example.tictactoe.ui.activity.login.LoginActivity
+import com.example.tictactoe.ui.activity.auth.AuthActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -22,8 +21,8 @@ class MainActivity : AppCompatActivity() {
         viewModel.isDataLoaded.observe(this, {
             if (it != null) {
                 when(it){
-                    LocalDataState.ERROR->{
-                        val intent = Intent(this, LoginActivity::class.java)
+                    is LocalDataState.ERROR->{
+                        val intent = Intent(this, AuthActivity::class.java)
                         startActivity(intent)
                     }
                 }

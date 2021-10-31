@@ -1,5 +1,6 @@
 package com.example.tictactoe.data.datasources
 
+import com.example.tictactoe.data.models.GameCreationParams
 import com.example.tictactoe.data.models.GameInfo
 import com.example.tictactoe.data.models.LoginBody
 import com.example.tictactoe.data.models.LoginResponse
@@ -19,6 +20,10 @@ class RemoteDataSourceImpl @Inject constructor(
 
     override suspend fun gameList(): Response<List<GameInfo>> {
         return gameApi.getAllAvailableGames()
+    }
+
+    override suspend fun createGameInstance(body: GameCreationParams): Response<String> {
+        return gameApi.createGameInstance(body)
     }
 
 }

@@ -19,7 +19,7 @@
             android:name=".ui.activity.game.GameActivity"
             android:exported="true" />
         <activity
-            android:name=".ui.activity.login.LoginActivity"
+            android:name=".ui.activity.auth.AuthActivity"
             android:exported="true" />
         <activity
             android:name=".ui.activity.main.MainActivity"

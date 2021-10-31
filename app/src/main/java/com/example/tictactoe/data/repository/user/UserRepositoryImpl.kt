@@ -19,14 +19,14 @@ class UserRepositoryImpl @Inject constructor(
     private val remoteDataSource: RemoteDataSource,
 ): UserRepository {
     override val userId= MutableLiveData<Int>()
-    override val isLocalDataLoaded = MutableLiveData<LocalDataState>(LocalDataState.LOADING)
+    override val isLocalDataLoaded = MutableLiveData<LocalDataState<Int>>()
     override val isRemoteDataLoaded = MutableLiveData<NetworkResult<LoginResponse>>()
 
     init {
         dataStoreSource.userData.asLiveData().observeForever {
             userId.value=it
             if(it==-1){
-                isLocalDataLoaded.value=LocalDataState.ERROR
+                isLocalDataLoaded.value=LocalDataState.ERROR()
             }else{
                 isLocalDataLoaded.value=LocalDataState.SUCCESS(it)
             }

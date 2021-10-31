@@ -31,7 +31,6 @@ class GameViewModel @Inject constructor(
         Transformations.map(gameRepository.markedFieldCoords) {
             val parsedValue=Gson().fromJson<List<HashMap<String, String>>>(it.movements, object: TypeToken<List<HashMap<String, String>>>(){}.type)
             //get only the number of square and the sign
-            Log.e("TAG", "$parsedValue")
             val processedValue=parsedValue.map { item->
                 hashMapOf(item["n"]!!.toInt() to item["sign"]!!)
             } as MutableList<HashMap<Int, String>>?
@@ -51,7 +50,6 @@ class GameViewModel @Inject constructor(
                     return@map move
                 }
             }
-            Log.e("TAG", "$processedValue /n $result")
             return@map result as MutableList<HashMap<Int, String>>?
         }
     var myId=-1

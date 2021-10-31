@@ -12,10 +12,13 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import okhttp3.Request
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.nio.Buffer
 import javax.inject.Singleton
+import okhttp3.RequestBody
+import okhttp3.logging.HttpLoggingInterceptor
 
 
 @Module
@@ -28,7 +31,7 @@ class WebModule {
     fun provideOkHttpClient():OkHttpClient{
         val interceptor=Interceptor{
             val url = it.request()
-                .url().newBuilder()
+                .url.newBuilder()
                 .build()
 
 
@@ -37,11 +40,15 @@ class WebModule {
                 .url(url)
                 .build()
 
+
             return@Interceptor it.proceed(request)
         }
+        val loggingInterceptor=HttpLoggingInterceptor()
+        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
 
         return OkHttpClient.Builder()
             .addInterceptor(interceptor)
+            .addInterceptor(loggingInterceptor)
             .build()
     }
 

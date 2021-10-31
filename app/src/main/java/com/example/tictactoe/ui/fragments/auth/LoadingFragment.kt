@@ -1,4 +1,4 @@
-package com.example.tictactoe.ui.fragments
+package com.example.tictactoe.ui.fragments.auth
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
