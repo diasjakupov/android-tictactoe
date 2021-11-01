@@ -1,9 +1,6 @@
 package com.example.tictactoe.data.datasources
 
-import com.example.tictactoe.data.models.GameCreationParams
-import com.example.tictactoe.data.models.GameInfo
-import com.example.tictactoe.data.models.LoginBody
-import com.example.tictactoe.data.models.LoginResponse
+import com.example.tictactoe.data.models.*
 import com.example.tictactoe.data.network.GameApi
 import com.example.tictactoe.data.network.UserApi
 import retrofit2.Response
@@ -14,7 +11,7 @@ class RemoteDataSourceImpl @Inject constructor(
     private val userApi: UserApi,
     private val gameApi: GameApi
 ):RemoteDataSource{
-    override suspend fun login(loginBody: LoginBody): Response<LoginResponse> {
+    override suspend fun login(loginBody: LoginBody): Response<AuthResponse.LoginResponse> {
         return userApi.login(loginBody)
     }
 
@@ -24,6 +21,10 @@ class RemoteDataSourceImpl @Inject constructor(
 
     override suspend fun createGameInstance(body: GameCreationParams): Response<String> {
         return gameApi.createGameInstance(body)
+    }
+
+    override suspend fun register(registerBody: RegisterBody): Response<AuthResponse.RegisterResponse> {
+        return userApi.register(registerBody)
     }
 
 }

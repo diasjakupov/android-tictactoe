@@ -22,7 +22,7 @@ class PlayMenuViewModel @Inject constructor(
         viewModelScope.launch {
             dataStoreSource.updateUserId()
         }
-        dataStoreSource.userData.asLiveData().observeForever {
+        dataStoreSource.userId.asLiveData().observeForever {
             userId = it
         }
     }

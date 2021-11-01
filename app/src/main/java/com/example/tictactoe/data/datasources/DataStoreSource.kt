@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.map
 class DataStoreSource(private val context:Context) {
     object PreferencesKey{
         val USER_ID = intPreferencesKey("userId")
+        val TOKEN = stringPreferencesKey("userToken")
         const val DATA_STORE_NAME = "gamePreferences"
     }
 
@@ -20,13 +21,23 @@ class DataStoreSource(private val context:Context) {
         PreferencesKey.DATA_STORE_NAME
     )
 
-    val userData: Flow<Int> = context.dataStore.data.map {
+    val userId: Flow<Int> = context.dataStore.data.map {
         it[PreferencesKey.USER_ID]?: -1
+    }
+
+    val userToken:Flow<String> = context.dataStore.data.map {
+        it[PreferencesKey.TOKEN]?: ""
     }
 
     suspend fun updateUserId(userId:Int=1){
         context.dataStore.edit {
             it[PreferencesKey.USER_ID]=userId
+        }
+    }
+
+    suspend fun updateUserToken(token:String=""){
+        context.dataStore.edit {
+            it[PreferencesKey.TOKEN]=token
         }
     }
 }

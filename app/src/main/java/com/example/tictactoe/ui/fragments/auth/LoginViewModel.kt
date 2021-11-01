@@ -20,4 +20,11 @@ class LoginViewModel @Inject constructor(
             repository.login(username, password)
         }
     }
+
+
+    fun register(username: String, password: String){
+        viewModelScope.launch(Dispatchers.IO){
+            repository.register(username, password)
+        }
+    }
 }
