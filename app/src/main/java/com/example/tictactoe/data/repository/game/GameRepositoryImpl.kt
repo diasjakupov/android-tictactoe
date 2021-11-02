@@ -31,8 +31,9 @@ class GameRepositoryImpl @Inject constructor(
         addWebSocketListener()
     }
 
-    override suspend fun createGameInstance(gameName: String, gameUUID: String): Boolean{
-        val response=remoteDataSource.createGameInstance(GameCreationParams(gameName, gameUUID))
+    override suspend fun createGameInstance(gameName: String, gameUUID: String, token: String): Boolean{
+        val response=remoteDataSource.createGameInstance(GameCreationParams(gameName, gameUUID),"Token $token")
+        Log.e("TAG", "${response.body()}")
         return when(handleNetworkResult(response)){
             is NetworkResult.Success->true
             is NetworkResult.Error->false

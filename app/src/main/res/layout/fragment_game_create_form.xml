@@ -34,6 +34,7 @@
                 android:backgroundTint="@color/black"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="@color/black"
                 android:hint="Game name..."
                 android:minHeight="48dp" />
 
@@ -56,6 +57,7 @@
                     android:backgroundTint="@color/black"
                     android:layout_marginEnd="8dp"
                     android:hint="Game name..."
+                    android:maxLength="6"
                     android:textColor="@color/black"
                     android:minHeight="48dp"
                     app:layout_constraintBottom_toBottomOf="parent"

@@ -33,22 +33,18 @@ class LoginFragment : Fragment() {
     private fun setUI() {
         //setOnClickListeners
         setOnClickListeners()
-        setOnFocusListeners()
-
     }
 
     private fun setOnFocusListeners() {
         rootView.usernameET.setOnFocusChangeListener { view, isFocused ->
             if (!isFocused) {
                 validateInputs((view as EditText).text.toString(), rootView.passwordET)
-
             }
 
         }
         rootView.passwordET.setOnFocusChangeListener { view, isFocused ->
             if (!isFocused) {
                 validateInputs((view as EditText).text.toString(), rootView.usernameET)
-
             }
         }
     }

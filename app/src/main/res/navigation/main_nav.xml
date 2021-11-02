@@ -48,5 +48,9 @@
         android:id="@+id/gameCreateFormFragment"
         android:name="com.example.tictactoe.ui.fragments.createGame.GameCreateFormFragment"
         android:label="fragment_game_create_form"
-        tools:layout="@layout/fragment_game_create_form" />
+        tools:layout="@layout/fragment_game_create_form" >
+        <action
+            android:id="@+id/action_gameCreateFormFragment_to_gameActivity"
+            app:destination="@id/gameActivity" />
+    </dialog>
 </navigation>

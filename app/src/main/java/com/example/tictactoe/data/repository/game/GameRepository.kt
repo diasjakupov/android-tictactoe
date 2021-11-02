@@ -13,6 +13,6 @@ interface GameRepository {
     fun createSocket(gameUUID: String, userId: Int)
     fun disconnect()
     suspend fun getGameList()
-    suspend fun createGameInstance(gameName: String, gameUUID: String): Boolean
+    suspend fun createGameInstance(gameName: String, gameUUID: String, token: String): Boolean
     suspend fun sendData(data:String)
 }

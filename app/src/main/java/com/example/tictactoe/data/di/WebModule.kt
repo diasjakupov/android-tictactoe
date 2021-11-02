@@ -44,8 +44,7 @@ class WebModule {
             return@Interceptor it.proceed(request)
         }
         val loggingInterceptor=HttpLoggingInterceptor()
-        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
-
+        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.HEADERS)
         return OkHttpClient.Builder()
             .addInterceptor(interceptor)
             .addInterceptor(loggingInterceptor)

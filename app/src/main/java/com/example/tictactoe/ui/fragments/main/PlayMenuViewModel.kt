@@ -16,6 +16,7 @@ class PlayMenuViewModel @Inject constructor(
     private val dataStoreSource: DataStoreSource
 ) : ViewModel() {
     private var userId: Int? = null
+    private var token: String? = null
     val isGameInstanceCreated = MutableLiveData<LocalDataState<Boolean>>()
 
     init {
@@ -24,6 +25,9 @@ class PlayMenuViewModel @Inject constructor(
         }
         dataStoreSource.userId.asLiveData().observeForever {
             userId = it
+        }
+        dataStoreSource.userToken.asLiveData().observeForever {
+            token=it
         }
     }
 
@@ -34,10 +38,9 @@ class PlayMenuViewModel @Inject constructor(
 
     suspend fun createGame(gameName: String, gameUUID: String): Boolean {
         isGameInstanceCreated.postValue(LocalDataState.LOADING())
-        if (userId != null) {
-            val isSuccessful = repository.createGameInstance(gameName, gameUUID)
+        if (userId != null && token != null) {
+            val isSuccessful = repository.createGameInstance(gameName, gameUUID, token!!)
             if (isSuccessful) {
-                repository.createSocket(gameUUID, userId!!)
                 isGameInstanceCreated.postValue(LocalDataState.SUCCESS(isSuccessful))
                 return true
             }else{

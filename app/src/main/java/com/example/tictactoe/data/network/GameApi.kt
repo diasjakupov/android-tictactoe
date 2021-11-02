@@ -5,6 +5,7 @@ import com.example.tictactoe.data.models.GameInfo
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.POST
 
 interface GameApi {
@@ -13,5 +14,5 @@ interface GameApi {
     suspend fun getAllAvailableGames(): Response<List<GameInfo>>
 
     @POST("game/create_game_instance")
-    suspend fun createGameInstance(@Body body:GameCreationParams): Response<String>
+    suspend fun createGameInstance(@Body body:GameCreationParams, @Header("Authorization") token:String): Response<HashMap<String, String>>
 }

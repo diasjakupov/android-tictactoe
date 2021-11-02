@@ -11,12 +11,14 @@ import android.widget.EditText
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.example.tictactoe.R
 import com.example.tictactoe.data.utils.LocalDataState
 import com.example.tictactoe.ui.fragments.main.PlayMenuViewModel
 import com.neovisionaries.ws.client.WebSocketState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_game_create_form.view.*
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -43,11 +45,12 @@ class GameCreateFormFragment : DialogFragment() {
         submitBtn.setOnClickListener {
             createGameInstance()
         }
+        observeDataStatus()
         return rootView
     }
 
     private fun createGameInstance(){
-        lifecycleScope.launch {
+        lifecycleScope.launch(Dispatchers.IO) {
             viewModel.createGame(gameNameET.text.toString(), gameCodeET.text.toString())
         }
     }
@@ -56,7 +59,8 @@ class GameCreateFormFragment : DialogFragment() {
         viewModel.isGameInstanceCreated.observe(viewLifecycleOwner, {
             when(it){
                 is LocalDataState.SUCCESS->{
-                    Log.e("TAG", "created")
+                    val action=GameCreateFormFragmentDirections.actionGameCreateFormFragmentToGameActivity(gameCodeET.text.toString())
+                    findNavController().navigate(action)
                 }
                 else->{
                     Log.e("TAG", "loading")

@@ -19,8 +19,8 @@ class RemoteDataSourceImpl @Inject constructor(
         return gameApi.getAllAvailableGames()
     }
 
-    override suspend fun createGameInstance(body: GameCreationParams): Response<String> {
-        return gameApi.createGameInstance(body)
+    override suspend fun createGameInstance(body: GameCreationParams, token:String): Response<HashMap<String, String>> {
+        return gameApi.createGameInstance(body, token)
     }
 
     override suspend fun register(registerBody: RegisterBody): Response<AuthResponse.RegisterResponse> {
